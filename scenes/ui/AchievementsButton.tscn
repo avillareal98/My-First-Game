@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/ui/MenuButton.tscn" type="PackedScene" id=1]
+
+[node name="AchievementsButton" instance=ExtResource( 1 )]
+text = "Achievements"
+scene_to_load = "res://scenes/ui/Achievements.tscn"

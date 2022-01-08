@@ -1,0 +1,60 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://scripts/items/Coin.gd" type="Script" id=1]
+[ext_resource path="res://assets/gfx/sprites/items/coin7.png" type="Texture" id=2]
+[ext_resource path="res://assets/gfx/sprites/items/coin4.png" type="Texture" id=3]
+[ext_resource path="res://assets/gfx/sprites/items/coin6.png" type="Texture" id=4]
+[ext_resource path="res://assets/gfx/sprites/items/coin8.png" type="Texture" id=5]
+[ext_resource path="res://assets/gfx/sprites/items/coin5.png" type="Texture" id=6]
+[ext_resource path="res://assets/gfx/sprites/items/coin1.png" type="Texture" id=7]
+[ext_resource path="res://assets/gfx/sprites/items/coin3.png" type="Texture" id=8]
+[ext_resource path="res://assets/gfx/sprites/items/coin2.png" type="Texture" id=9]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 7 ), ExtResource( 9 ), ExtResource( 8 ), ExtResource( 3 ), ExtResource( 6 ), ExtResource( 4 ), ExtResource( 2 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "spin",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 4.01238
+
+[sub_resource type="Animation" id=3]
+resource_name = "bounce"
+length = 0.55
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.55 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, -15 ), Vector2( 0, 0 ) ]
+}
+
+[node name="Coin" type="Area2D"]
+collision_layer = 0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "spin"
+frame = 4
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/bounce = SubResource( 3 )
+[connection signal="body_entered" from="." to="." method="_on_Coin_body_entered"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
