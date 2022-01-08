@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/ui/MenuButton.gd" type="Script" id=1]
+[ext_resource path="res://scenes/resources/carls_writing.tres" type="DynamicFont" id=2]
+
+[node name="MenuButton" type="Button"]
+margin_right = 82.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 2 )
+text = "New Game"
+flat = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scenes/gui/WeaponGUI.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/gui/CoinCounter.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/gui/GUI.gd" type="Script" id=4]
+
+[node name="GUI" type="CanvasLayer" groups=[
+"GUI",
+]]
+script = ExtResource( 4 )
+
+[node name="Interface" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CoinCounter" parent="Interface" instance=ExtResource( 2 )]
+
+[node name="WeaponGUI" parent="Interface" instance=ExtResource( 1 )]
+margin_top = 16.0
+margin_bottom = 16.0

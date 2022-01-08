@@ -1,0 +1,361 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://scenes/character/Character.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scripts/character/player/Player.gd" type="Script" id=2]
+[ext_resource path="res://scripts/character/player/Camera2D.gd" type="Script" id=3]
+[ext_resource path="res://scripts/character/player/PlayerFSM.gd" type="Script" id=4]
+[ext_resource path="res://scenes/weapons/Hitbox.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/gui/HeartUI.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/character/player/Aura.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/character/player/Shield.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scripts/character/player/PlayerActionFSM.gd" type="Script" id=28]
+[ext_resource path="res://scripts/items/ArrowDetectionCircle.gd" type="Script" id=46]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 6, 6 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 3, 2 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 3, 7 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 3, 8 )
+
+[sub_resource type="Animation" id=5]
+resource_name = "charge"
+length = 0.1
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Character:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.239216, 0.443137, 0.996078, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 0.1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Character:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Character:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+
+[sub_resource type="Animation" id=8]
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Character:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Character:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=9]
+extents = Vector2( 3, 8 )
+
+[node name="Player" type="KinematicBody2D"]
+position = Vector2( 128, 110 )
+collision_layer = 513
+collision_mask = 7394
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+bottom_limit = 800
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 4 )
+
+[node name="ActionStateMachine" type="Node" parent="."]
+script = ExtResource( 28 )
+
+[node name="Character" parent="." instance=ExtResource( 1 )]
+playing = false
+
+[node name="SwordAttack" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SwordAttack"]
+position = Vector2( 9, -2 )
+shape = SubResource( 1 )
+disabled = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+smoothing_enabled = true
+drag_margin_left = 0.4
+drag_margin_top = 0.36
+drag_margin_right = 0.4
+drag_margin_bottom = 0.13
+editor_draw_drag_margin = true
+script = ExtResource( 3 )
+
+[node name="ShiftTween" type="Tween" parent="Camera2D"]
+
+[node name="WallRaycasts" type="Node2D" parent="."]
+
+[node name="LeftWallRaycasts" type="Node2D" parent="WallRaycasts"]
+
+[node name="LeftWallRaycasts1" type="RayCast2D" parent="WallRaycasts/LeftWallRaycasts"]
+position = Vector2( -3, -6 )
+enabled = true
+cast_to = Vector2( -4, 0 )
+collision_mask = 32
+
+[node name="LeftWallRaycasts2" type="RayCast2D" parent="WallRaycasts/LeftWallRaycasts"]
+position = Vector2( -3, 6 )
+enabled = true
+cast_to = Vector2( -4, 0 )
+collision_mask = 32
+
+[node name="RightWallRaycasts" type="Node2D" parent="WallRaycasts"]
+
+[node name="RightWallRaycasts1" type="RayCast2D" parent="WallRaycasts/RightWallRaycasts"]
+position = Vector2( 3, 6 )
+enabled = true
+cast_to = Vector2( 4, 0 )
+collision_mask = 32
+
+[node name="RightWallRaycasts2" type="RayCast2D" parent="WallRaycasts/RightWallRaycasts"]
+position = Vector2( 3, -6 )
+enabled = true
+cast_to = Vector2( 4, 0 )
+collision_mask = 32
+
+[node name="Raycasts" type="Node2D" parent="."]
+visible = false
+
+[node name="RayCast2D" type="RayCast2D" parent="Raycasts"]
+position = Vector2( 2, 7 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+collision_mask = 96
+
+[node name="RayCast2D2" type="RayCast2D" parent="Raycasts"]
+position = Vector2( 0, 7 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+collision_mask = 96
+
+[node name="RayCast2D3" type="RayCast2D" parent="Raycasts"]
+position = Vector2( -2, 7 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+collision_mask = 96
+
+[node name="DropThruRaycasts" type="Node2D" parent="."]
+visible = false
+
+[node name="RayCast2D" type="RayCast2D" parent="DropThruRaycasts"]
+position = Vector2( 2, 7 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+collision_mask = 64
+
+[node name="RayCast2D2" type="RayCast2D" parent="DropThruRaycasts"]
+position = Vector2( 0, 7 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+collision_mask = 64
+
+[node name="RayCast2D3" type="RayCast2D" parent="DropThruRaycasts"]
+position = Vector2( -2, 7 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+collision_mask = 64
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2( 0, 7 )
+collision_layer = 0
+collision_mask = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 2 )
+
+[node name="PhysicsShape" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="PhysicsShape2" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StateLabel" type="Label" parent="."]
+margin_left = -20.0
+margin_top = -25.0
+margin_right = 20.0
+margin_bottom = -11.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StateLabel2" type="Label" parent="."]
+margin_left = -20.0
+margin_top = -39.0
+margin_right = 20.0
+margin_bottom = -25.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+visible = false
+margin_left = -60.0
+margin_top = -53.0
+margin_right = 60.0
+margin_bottom = -39.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WallSlideCooldown" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="WallSlideStickyTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="Hitbox" parent="." instance=ExtResource( 5 )]
+collision_layer = 512
+collision_mask = 0
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource( 4 )
+
+[node name="InvulnerabilityTimer" type="Timer" parent="."]
+wait_time = 0.8
+one_shot = true
+
+[node name="EffectsAnimation" type="AnimationPlayer" parent="."]
+anims/charge = SubResource( 5 )
+anims/damage = SubResource( 6 )
+anims/flash = SubResource( 7 )
+anims/rest = SubResource( 8 )
+
+[node name="ArrowDetectionCircle" type="Area2D" parent="."]
+visible = false
+collision_layer = 0
+collision_mask = 1024
+script = ExtResource( 46 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ArrowDetectionCircle"]
+shape = SubResource( 9 )
+
+[node name="ChargeEnergyTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="Aura" parent="." instance=ExtResource( 7 )]
+frame = 2
+
+[node name="DashDuration" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="DashCooldown" type="Timer" parent="."]
+one_shot = true
+
+[node name="GhostTimer" type="Timer" parent="."]
+wait_time = 0.05
+
+[node name="BounceRaycasts" type="Node2D" parent="."]
+visible = false
+
+[node name="RayCast2D" type="RayCast2D" parent="BounceRaycasts"]
+position = Vector2( 0, 7 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+collision_mask = 16
+collide_with_areas = true
+
+[node name="RayCast2D2" type="RayCast2D" parent="BounceRaycasts"]
+position = Vector2( -2, 7 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+collision_mask = 16
+collide_with_areas = true
+
+[node name="RayCast2D3" type="RayCast2D" parent="BounceRaycasts"]
+position = Vector2( 2, 7 )
+enabled = true
+cast_to = Vector2( 0, 2 )
+collision_mask = 16
+collide_with_areas = true
+
+[node name="Shield" parent="." instance=ExtResource( 8 )]
+position = Vector2( 4, 1 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HeartUI" parent="CanvasLayer" instance=ExtResource( 6 )]
+
+[connection signal="grounded_update" from="." to="Camera2D" method="_on_Player_grounded_update"]
+[connection signal="animation_finished" from="Character" to="StateMachine" method="_on_Character_animation_finished"]
+[connection signal="frame_changed" from="Character" to="StateMachine" method="_on_Character_frame_changed"]
+[connection signal="body_entered" from="SwordAttack" to="." method="_on_SwordAttack_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]
+[connection signal="timeout" from="WallSlideStickyTimer" to="StateMachine" method="_on_WallSlideStickyTimer_timeout"]
+[connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_Hitbox_area_entered"]
+[connection signal="timeout" from="InvulnerabilityTimer" to="." method="_on_InvulnerabilityTimer_timeout"]
+[connection signal="area_entered" from="ArrowDetectionCircle" to="ArrowDetectionCircle" method="_on_ArrowDetectionCircle_area_entered"]
+[connection signal="timeout" from="DashDuration" to="." method="_on_DashDuration_timeout"]
+[connection signal="timeout" from="DashCooldown" to="." method="_on_DashCooldown_timeout"]
+[connection signal="timeout" from="GhostTimer" to="." method="_on_GhostTimer_timeout"]

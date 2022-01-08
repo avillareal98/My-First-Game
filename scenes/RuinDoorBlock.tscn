@@ -1,0 +1,50 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://assets/gfx/sprites/ruins_door_block1.png" type="Texture" id=2]
+[ext_resource path="res://scripts/DoorBlock.gd" type="Script" id=3]
+[ext_resource path="res://assets/gfx/sprites/ruins_door_block2.png" type="Texture" id=4]
+[ext_resource path="res://assets/gfx/sprites/ruins_door_block3.png" type="Texture" id=5]
+[ext_resource path="res://assets/gfx/sprites/ruins_door_block4.png" type="Texture" id=6]
+
+[sub_resource type="Animation" id=1]
+resource_name = "down_up"
+length = 0.6
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("KinematicBody2D/Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 2 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 4, 16 )
+
+[node name="RuinDoorBlock" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/down_up = SubResource( 1 )
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+collision_layer = 2048
+collision_mask = 3
+
+[node name="Sprite" type="Sprite" parent="KinematicBody2D"]
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
+visible = false
+shape = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
